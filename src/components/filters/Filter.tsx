@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useState, type InputHTMLAttributes } from 'react';
+import { useId, useState, type InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 type InputProps = Pick<InputHTMLAttributes<HTMLInputElement>, 'autoComplete'>;
@@ -35,6 +35,7 @@ export const Filter = (props: Props) => {
   const [touched, setTouched] = useState(false);
 
   const invalid = !!(errorMessage && touched);
+  const errorId = useId();
 
   return (
     <StyledFilter className={className}>
@@ -47,10 +48,12 @@ export const Filter = (props: Props) => {
           data-testid={id}
           onBlur={() => setTouched(true)}
           onChange={(e) => onChange(e.target.value)}
+          aria-invalid={invalid}
+          aria-describedby={invalid ? errorId : undefined}
           {...inputProps}
         />
       </InputDiv>
-      {invalid && <InvalidMessage>{errorMessage}</InvalidMessage>}
+      {invalid && <InvalidMessage id={errorId}>{errorMessage}</InvalidMessage>}
     </StyledFilter>
   );
 };
