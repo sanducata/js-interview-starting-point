@@ -44,6 +44,7 @@ export const Filters = (props: Props) => {
     const { mandatory, isNumber, value } = filter;
     const errorMessage =
       fieldsValidation && mandatory && !value ? 'This field is mandatory' : '';
+    const inputType = isNumber ? 'number' : 'text';
 
     return (
       <Filter
@@ -59,8 +60,13 @@ export const Filters = (props: Props) => {
         inputProps={{
           autoComplete: filter.id === 'name' ? 'organization' : 'off',
           required: mandatory,
-          type: isNumber ? 'number' : 'text',
+          type: inputType,
           onBlur: () => setFieldsValidation(true),
+          onKeyDown: (e) => {
+            if (inputType === 'number' && (e.key === 'e' || e.key === 'E')) {
+              e.preventDefault();
+            }
+          },
         }}
       />
     );
@@ -87,5 +93,5 @@ const Div = styled.div`
 `;
 
 const Title = styled.h2`
-  margin-top: 0;
+  margin: 0;
 `;

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 type InputProps = Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'autoComplete' | 'required' | 'type' | 'onBlur'
+  'autoComplete' | 'required' | 'type' | 'onBlur' | 'onKeyDown'
 >;
 
 type Props = {
@@ -44,7 +44,6 @@ export const Filter = (props: Props) => {
           id={id}
           className={classNames({ invalid })}
           value={value}
-          data-testid={id}
           onChange={(e) => onChange(e.target.value)}
           {...inputProps}
         />
@@ -70,7 +69,8 @@ const InputDiv = styled.div`
   input {
     flex: 1;
     border-radius: 6px;
-    border: 1px solid #000;
+    border: 1px solid #8a8a8aff;
+    min-width: 0;
 
     &.invalid {
       border: 1px solid red;
