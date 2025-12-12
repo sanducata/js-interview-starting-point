@@ -26,14 +26,17 @@ export default App;
 const Page = styled.div`
   max-width: 800px;
   margin: 0 auto;
-  border: 1px solid #000;
+  border: 1px solid #8a8a8aff;
   border-radius: 16px;
-  padding: 20px 40px;
+  padding: 20px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
   @media screen and (max-width: 600px) {
     flex-direction: column;
-    padding-inline: 10px;
+    padding: 10px;
   }
 `;
 

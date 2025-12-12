@@ -10,6 +10,8 @@ export type TFilter = {
 
 export const Shops = (filters: TFilter) => {
   const { shops, isLoading, isError } = usePrepareShops(filters);
+  const { x, y } = filters;
+  const hasUserPosition = x !== null && y !== null;
 
   const renderContent = () => {
     if (isError) {
@@ -25,21 +27,30 @@ export const Shops = (filters: TFilter) => {
     }
 
     return (
-      <ShopsList aria-label='Coffee shops list'>
-        {shops?.map((shop, index) => (
-          <ShopItem
-            key={`${shop.id}-${index}`}
-            className={classNames({ highlight: index < 3 })}
-          >
-            <ShopName>{shop.name}</ShopName>
-            <ShopDetails>
-              {shop.distance
-                ? `Distance: ${shop.distance}`
-                : `Coordinates: ${shop.x}, ${shop.y}`}
-            </ShopDetails>
-          </ShopItem>
-        ))}
-      </ShopsList>
+      <>
+        <p>
+          Top 3 closest coffee shops to the user position
+          <span>{!hasUserPosition ? ' will be' : ' are'}</span> highlighted.
+          {!hasUserPosition && <span> Please provide coordinates.</span>}
+        </p>
+        <ShopsList aria-label='Coffee shops list'>
+          {shops?.map((shop, index) => (
+            <ShopItem
+              key={`${shop.id}-${index}`}
+              className={classNames({
+                highlight: hasUserPosition && index < 3,
+              })}
+            >
+              <ShopName>{shop.name}</ShopName>
+              <ShopDetails>
+                {shop.distance
+                  ? `Distance: ${shop.distance}`
+                  : `Coordinates: ${shop.x}, ${shop.y}`}
+              </ShopDetails>
+            </ShopItem>
+          ))}
+        </ShopsList>
+      </>
     );
   };
 
@@ -54,20 +65,21 @@ export const Shops = (filters: TFilter) => {
 const Div = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
 `;
 
 const Title = styled.h2`
-  margin-top: 0;
+  margin: 0;
 `;
 
 const ShopsList = styled.ul`
   list-style-type: none;
-  padding: 20px 40px;
+  padding: 20px;
   margin: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid #000;
+  border: 1px solid #8a8a8aff;
   border-radius: 12px;
 `;
 
