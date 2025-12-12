@@ -2,7 +2,10 @@ import classNames from 'classnames';
 import { useState, type InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
-type InputProps = Pick<InputHTMLAttributes<HTMLInputElement>, 'autoComplete'>;
+type InputProps = Pick<
+  InputHTMLAttributes<HTMLInputElement>,
+  'autoComplete' | 'required'
+>;
 
 type Props = {
   className?: string;
@@ -65,12 +68,13 @@ const InputDiv = styled.div`
   gap: 4px;
 
   label {
-    width: 50px;
+    min-width: 50px;
   }
 
   input {
     flex: 1;
     border-radius: 6px;
+    border: 1px solid #000;
 
     &.invalid {
       border: 1px solid red;

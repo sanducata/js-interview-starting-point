@@ -1,4 +1,5 @@
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
 import { Filter } from './Filter';
 
@@ -14,6 +15,8 @@ describe('Filter component', () => {
   });
 
   it('renders an invalid filter if invalid is passed', async () => {
+    const user = userEvent.setup();
+
     render(
       <Filter
         id='2'
@@ -27,10 +30,8 @@ describe('Filter component', () => {
     expect(screen.getByText('x')).toBeInTheDocument();
     const input = screen.getByRole('textbox');
 
-    act(() => {
-      input.focus();
-      input.blur();
-    });
+    await user.click(input);
+    await user.tab();
 
     expect(input.classList.contains('invalid')).toBe(true);
     expect(screen.getByText('This field is mandatory')).toBeInTheDocument();

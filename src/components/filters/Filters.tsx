@@ -37,10 +37,11 @@ export const Filters = styled((props: Props) => {
         key={`filter-${filter.id}-${index}`}
         value={filter.value}
         onChange={(val) => onFilterChange(filter.id, val)}
-        label={filter.id}
+        label={filter.label}
         errorMessage={errorMessage}
         inputProps={{
           autoComplete: filter.id === 'name' ? 'organization' : 'off',
+          required: mandatory,
         }}
       />
     );
@@ -48,7 +49,7 @@ export const Filters = styled((props: Props) => {
 
   return (
     <div className={className}>
-      <h2>Filters</h2>
+      <Title>Filters</Title>
       {filters.map(renderFilter)}
     </div>
   );
@@ -57,4 +58,12 @@ export const Filters = styled((props: Props) => {
   display: flex;
   flex-direction: column;
   gap: 6px;
+
+  @media screen and (max-width: 600px) {
+    max-width: 100%;
+  }
+`;
+
+const Title = styled.h2`
+  margin-top: 0;
 `;
