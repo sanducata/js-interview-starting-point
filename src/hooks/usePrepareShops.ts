@@ -21,8 +21,10 @@ export const usePrepareShops = ({ x, y, name }: TFilter) => {
     enabled: !!tokenData,
   });
 
+  const hasUserPosition = x !== null && y !== null;
+
   const extendedShops =
-    x !== null && y != null && shopsData
+    hasUserPosition && shopsData
       ? shopsData
           .map((shop) => ({
             ...shop,
@@ -32,7 +34,7 @@ export const usePrepareShops = ({ x, y, name }: TFilter) => {
       : shopsData;
 
   const filteredShops =
-    name && extendedShops
+    name && extendedShops && hasUserPosition
       ? extendedShops.filter((shop) =>
           shop.name.toLowerCase().includes(name.toLowerCase())
         )
