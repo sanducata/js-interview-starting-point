@@ -1,14 +1,13 @@
 import classNames from 'classnames';
-import { useState, type InputHTMLAttributes } from 'react';
+import { type InputHTMLAttributes } from 'react';
 import styled from 'styled-components';
 
 type InputProps = Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'autoComplete' | 'required'
+  'autoComplete' | 'required' | 'type' | 'onBlur'
 >;
 
 type Props = {
-  className?: string;
   id: string;
   /**
    * Label to display for the filter
@@ -33,14 +32,12 @@ type Props = {
 };
 
 export const Filter = (props: Props) => {
-  const { id, label, value, onChange, className, errorMessage, inputProps } =
-    props;
-  const [touched, setTouched] = useState(false);
+  const { id, label, value, onChange, errorMessage, inputProps } = props;
 
-  const invalid = !!(errorMessage && touched);
+  const invalid = !!errorMessage;
 
   return (
-    <StyledFilter className={className}>
+    <StyledFilter>
       <InputDiv>
         <label htmlFor={id}>{label}</label>
         <input
@@ -48,7 +45,6 @@ export const Filter = (props: Props) => {
           className={classNames({ invalid })}
           value={value}
           data-testid={id}
-          onBlur={() => setTouched(true)}
           onChange={(e) => onChange(e.target.value)}
           {...inputProps}
         />

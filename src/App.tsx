@@ -1,14 +1,21 @@
 import styled from 'styled-components';
 import { Filters } from './components/filters/Filters';
-import { Shops } from './components/shops/Shops';
+import { Shops, type TFilter } from './components/shops/Shops';
+import { useState } from 'react';
 
 function App() {
+  const [filters, setFilters] = useState<TFilter>({
+    x: null,
+    y: null,
+    name: '',
+  });
+
   return (
     <Page>
       <Title>Coffee Addicts</Title>
       <PageContent>
-        <Filters />
-        <Shops />
+        <Filters onFiltersChange={setFilters} />
+        <Shops {...filters} />
       </PageContent>
     </Page>
   );
@@ -23,6 +30,11 @@ const Page = styled.div`
   border-radius: 16px;
   padding: 20px 40px;
   box-sizing: border-box;
+
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    padding-inline: 10px;
+  }
 `;
 
 const Title = styled.h1`

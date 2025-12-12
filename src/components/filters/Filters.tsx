@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Filter } from './Filter';
 import styled from 'styled-components';
-import { getInputErrorMessage } from '../../utils/utils';
-
-type Props = { className?: string };
+import type { TFilter } from '../shops/Shops';
 
 type FilterItem = {
   id: string;
@@ -19,41 +17,65 @@ const initialFilters: FilterItem[] = [
   { id: 'name', label: 'Name', value: '', mandatory: false },
 ];
 
-export const Filters = styled((props: Props) => {
-  const { className } = props;
+type Props = {
+  onFiltersChange?: (filters: TFilter) => void;
+};
+
+export const Filters = (props: Props) => {
+  const { onFiltersChange } = props;
 
   const [filters, setFilters] = useState<FilterItem[]>(initialFilters);
+  const [fieldsValidation, setFieldsValidation] = useState(false);
 
-  const onFilterChange = (id: string, value: string) =>
-    setFilters((prev) => prev.map((f) => (f.id === id ? { ...f, value } : f)));
+  const onFilterChange = (id: string, value: string) => {
+    const nextFilters = filters.map((f) => (f.id === id ? { ...f, value } : f));
+    setFilters(nextFilters);
+
+    const x = Number(nextFilters.find((f) => f.id === 'x')?.value) || null;
+    const y = Number(nextFilters.find((f) => f.id === 'y')?.value) || null;
+    const name = nextFilters.find((f) => f.id === 'name')?.value || '';
+
+    if (onFiltersChange) {
+      onFiltersChange({ x, y, name });
+    }
+  };
 
   const renderFilter = (filter: FilterItem, index: number) => {
     const { mandatory, isNumber, value } = filter;
-    const errorMessage = getInputErrorMessage(mandatory, value, isNumber);
+    const errorMessage =
+      fieldsValidation && mandatory && !value ? 'This field is mandatory' : '';
 
     return (
       <Filter
         id={filter.id}
         key={`filter-${filter.id}-${index}`}
         value={filter.value}
-        onChange={(val) => onFilterChange(filter.id, val)}
-        label={filter.label}
+        onChange={(val) => {
+          onFilterChange(filter.id, val);
+          setFieldsValidation(true);
+        }}
+        label={`${filter.label}${mandatory ? '*' : ''}`}
         errorMessage={errorMessage}
         inputProps={{
           autoComplete: filter.id === 'name' ? 'organization' : 'off',
           required: mandatory,
+          type: isNumber ? 'number' : 'text',
+          onBlur: () => setFieldsValidation(true),
         }}
       />
     );
   };
 
   return (
-    <div className={className}>
+    <Div>
       <Title>Filters</Title>
+      <p>Fields marked with * are mandatory.</p>
       {filters.map(renderFilter)}
-    </div>
+    </Div>
   );
-})`
+};
+
+const Div = styled.div`
   max-width: 300px;
   display: flex;
   flex-direction: column;
