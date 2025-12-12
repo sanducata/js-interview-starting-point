@@ -1,60 +1,52 @@
 import classNames from 'classnames';
 import styled from 'styled-components';
+import { usePrepareShops } from '../../hooks/usePrepareShops';
 
-const dummyShops = [
-  {
-    id: 2,
-    name: 'Blue Bottle SF',
-    x: '37.521',
-    y: '-122.334',
-  },
-  {
-    id: 1,
-    name: 'Blue Bottle Seattle',
-    x: '47.581',
-    y: '-122.316',
-  },
-  {
-    id: 3,
-    name: 'Blue Bottle Moscow',
-    x: '55.752',
-    y: '37.595',
-  },
-  {
-    id: 4,
-    name: 'Blue Bottle Seattle2',
-    x: '47.587',
-    y: '-122.337',
-  },
-  {
-    id: 5,
-    name: 'Blue Bottle Rio De Janeiro',
-    x: '-22.923',
-    y: '-43.234',
-  },
-];
+export type TFilter = {
+  x: number | null;
+  y: number | null;
+  name: string;
+};
 
-export const Shops = () => {
+export const Shops = (filters: TFilter) => {
+  const { shops, isLoading, isError } = usePrepareShops(filters);
+
+  const renderContent = () => {
+    if (isError) {
+      return <p>Something went wrong while fetching coffee shops.</p>;
+    }
+
+    if (isLoading) {
+      return <p>Loading coffee shops...</p>;
+    }
+
+    if (shops?.length === 0) {
+      return <p>Sorry, no coffee shops available in your area :(</p>;
+    }
+
+    return (
+      <ShopsList aria-label='Coffee shops list'>
+        {shops?.map((shop, index) => (
+          <ShopItem
+            key={`${shop.id}-${index}`}
+            className={classNames({ highlight: index < 3 })}
+          >
+            <ShopName>{shop.name}</ShopName>
+            <ShopDetails>
+              {shop.distance
+                ? `Distance: ${shop.distance}`
+                : `Coordinates: ${shop.x}, ${shop.y}`}
+            </ShopDetails>
+          </ShopItem>
+        ))}
+      </ShopsList>
+    );
+  };
+
   return (
     <Div>
       <Title>Coffee shops</Title>
-      {dummyShops.length > 0 ? (
-        <ShopsList aria-label='Coffee shops list'>
-          {dummyShops.map((shop, index) => (
-            <ShopItem
-              key={`${shop.id}-${index}`}
-              className={classNames({ highlight: index < 3 })}
-            >
-              <ShopName>{shop.name}</ShopName>
-              <ShopDetails>
-                Distance: {shop.x}, {shop.y}
-              </ShopDetails>
-            </ShopItem>
-          ))}
-        </ShopsList>
-      ) : (
-        <p>Sorry, no coffee shops available in your area :(</p>
-      )}
+      {renderContent()}
     </Div>
   );
 };

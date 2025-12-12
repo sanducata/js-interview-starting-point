@@ -1,28 +1,16 @@
 /**
- * Returns an error message if the input value is invalid.
+ * Calculate the distance between the user and a coffee shop using the Euclidean distance formula
  *
- * @param mandatory Boolean indicating wether the filter is mandatory or not
- * @param value Filter value
- * @param isNumber Boolean indicating wether the filter should be a number or not
- * @returns Invalid status and error message if any
+ * @param userPosition
+ * @param shopPosition
+ * @returns distance between user and coffee shop rounded to 4 decimals
  */
-export const getInputErrorMessage = (
-  mandatory: boolean,
-  value: string | number,
-  isNumber = false
-): string => {
-  const isEmpty = !value;
+export const getDistance = (
+  userPosition: { x: number; y: number },
+  shopPosition: { x: number; y: number }
+) => {
+  const distX = userPosition.x - shopPosition.x;
+  const distY = userPosition.y - shopPosition.y;
 
-  if (mandatory && isEmpty) {
-    return 'This field is mandatory';
-  }
-
-  if (isNumber) {
-    const isNumeric = !Number.isNaN(Number(value));
-    if (!isNumeric) {
-      return 'Value must be a number';
-    }
-  }
-
-  return '';
+  return Number(Math.sqrt(distX * distX + distY * distY).toFixed(4));
 };

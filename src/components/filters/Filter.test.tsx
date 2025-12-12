@@ -15,8 +15,6 @@ describe('Filter component', () => {
   });
 
   it('renders an invalid filter if invalid is passed', async () => {
-    const user = userEvent.setup();
-
     render(
       <Filter
         id='2'
@@ -28,7 +26,9 @@ describe('Filter component', () => {
     );
 
     expect(screen.getByText('x')).toBeInTheDocument();
+
     const input = screen.getByRole('textbox');
+    const user = userEvent.setup();
 
     await user.click(input);
     await user.tab();
