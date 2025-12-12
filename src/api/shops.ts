@@ -1,7 +1,9 @@
 import { BASE_URL } from './constants';
-import type { Shops } from './types';
+import type { TShops } from './types';
 
-export const getShops = async (token: string | undefined): Promise<Shops[]> => {
+export const getShops = async (
+  token: string | undefined
+): Promise<TShops[]> => {
   if (!token) {
     throw new Error('A token must be provided!');
   }
@@ -20,7 +22,7 @@ export const getShops = async (token: string | undefined): Promise<Shops[]> => {
     throw new Error('No coffee shops found!');
   }
 
-  return data.map((shop: Shops) => ({
+  return data.map((shop: TShops) => ({
     ...shop,
     x: Number(shop.x),
     y: Number(shop.y),
